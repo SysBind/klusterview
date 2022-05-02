@@ -4,6 +4,8 @@ const stage_width = 800;
 const stage_height = 600;
 const actor_spacing = 10;
 
+const sleep = ms => new Promise(r => setTimeout(r, ms))
+
 class Stage {
     constructor(selector = "#stage") {
         this.draw = SVG().addTo(selector).size(stage_width, stage_height)
@@ -13,41 +15,66 @@ class Stage {
     add(el) {        
         this.draw.add(el)
 
-        for (const actor of this.actors) {            
-            window.console.log('checking collistion with '  + actor)
-            window.console.log(actor.bbox())
-            window.console.log(el.bbox())
-
-            if (el.bbox().x < actor.bbox().x2 &&
-                el.bbox().x2 > actor.bbox().x &&
-                el.bbox().y < actor.bbox().y2 &&
-                el.bbox().y2 > actor.bbox().y) {
-                console.log("COLLISIONS!");
+        var target_bbox = el.bbox()
+        var xcount = 0        
+        for (const actor of this.actors) {
+            xcount += 1
+            let xspacing = xcount * actor_spacing
+            window.console.log('considering ' + actor)            
+            let real_bbox = actor.remember('target_bbox')
+            window.console.log(real_bbox)
+            window.console.log(target_bbox)
+            if (target_bbox.x < real_bbox.x2 &&
+                target_bbox.x2 > real_bbox.x &&
+                target_bbox.y < real_bbox.y2 &&
+                target_bbox.y2 > real_bbox.y) {
+                window.console.log('COLLISIONS!')
                 // move X ?
-                if (actor.bbox().x2 + el.bbox().width  < stage_width  + actor_spacing) {
-                    el.animate().move(actor.bbox().width + actor_spacing, 0)
+                if (real_bbox.x2 + target_bbox.width  < (stage_width  + xspacing)) {
+                    target_bbox.x = real_bbox.x2 + xspacing
+                    target_bbox.x2 = target_bbox.x + target_bbox.width
                 } else {
-                    el.animate().move(0, actor.bbox().height  + actor_spacing)
+                    target_bbox.y = real_bbox.height  + actor_spacing
+                    target_bbox.y2 = target_bbox.y + target_bbox.height
+                    xcount = 0
                 }
-               
+                window.console.log(target_bbox)
+                window.console.log(el.animate().move(target_bbox.x, target_bbox.y))
             }
         }
+        el.remember('target_bbox', target_bbox)
         this.actors.push(el)
     }
 }
 
 var stage = new Stage()
 stage.add(new SVG.Rect().size(200,200))
+
 stage.add(new SVG.Rect().size(100,300).attr({
   fill: '#f06'
 , 'fill-opacity': 0.9
 , stroke: '#333'
 , 'stroke-width': 10
 }))
+
 stage.add(new SVG.Rect().size(100,100).attr({
   fill: '#f60'
 , 'fill-opacity': 0.9
 , stroke: '#636'
+, 'stroke-width': 10
+}))
+
+stage.add(new SVG.Rect().size(400,100).attr({
+  fill: '#f60'
+, 'fill-opacity': 0.9
+, stroke: '#636'
+, 'stroke-width': 10
+}))
+
+stage.add(new SVG.Rect().size(200,200).attr({
+  fill: '#f30'
+, 'fill-opacity': 0.1
+, stroke: '#996'
 , 'stroke-width': 10
 }))
 
