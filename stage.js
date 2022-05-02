@@ -4,51 +4,28 @@ const stage_width = 800;
 const stage_height = 600;
 const actor_spacing = 20;
 
-const sleep = ms => new Promise(r => setTimeout(r, ms))
-
 class Stage {
     constructor(selector = "#stage") {
         this.draw = SVG().addTo(selector).size(stage_width, stage_height)
         this.actors = new SVG.List()
+        this.spaces = [ [0, 0, stage_width, stage_height] ]
     }
 
     add(el) {        
         this.draw.add(el)
-
-        var target_bbox = el.bbox()
-        var max_y = 0
-        var cur_y = 0
-        for (const actor of this.actors) {            
-
-            let real_bbox = actor.remember('target_bbox')
-            if (real_bbox.y2 > max_y)
-                max_y = real_bbox.y2
-            
-            window.console.log(real_bbox)
-            window.console.log(target_bbox)
-            if (target_bbox.x < real_bbox.x2 &&
-                target_bbox.x2 > real_bbox.x &&
-                target_bbox.y < real_bbox.y2 &&
-                target_bbox.y2 > real_bbox.y) {
-                window.console.log('COLLISIONS!')
-                // move X ?
-                if (real_bbox.x2 + target_bbox.width  < (stage_width  + actor_spacing)) {
-                    target_bbox.y = cur_y
-                    target_bbox.y2 = target_bbox.y + target_bbox.height
-                    target_bbox.x = real_bbox.x2 + actor_spacing
-                    target_bbox.x2 = target_bbox.x + target_bbox.width
-                } else {
-                    target_bbox.y = max_y  + actor_spacing                    
-                    target_bbox.y2 = target_bbox.y + target_bbox.height
-                    target_bbox.x = 0
-                    target_bbox.x2 = target_bbox.x + target_bbox.width
-                    this.cur_y = max_y                    
-                }
-                el.animate().move(target_bbox.x, target_bbox.y)
-            }
-        }
-        el.remember('target_bbox', target_bbox)
+        var space = this.find_smallest_fit(el.bbox())
+        var x = ((space[2] - space[0]) - (el.bbox().width) ) / 2
+        var y = ((space[3] - space[1]) - (el.bbox().height) ) / 2
+        el.animate().move(x, y)
         this.actors.push(el)
+    }
+
+    find_smallest_fit(bbox) {
+        //for (space in this.spaces) {    }
+        return this.spaces[0];
+    }
+
+    recalculate_spaces() {
     }
 }
 
