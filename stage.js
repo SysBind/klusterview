@@ -73,7 +73,8 @@ stage.add(new SVG.Rect().size(200,200).attr({
 
 
 function add_one() {
-    stage.add(new SVG.Rect().size(150,150).attr({
+    var size = Math.floor(Math.random() * 300);
+    stage.add(new SVG.Rect().size(size, size).attr({
         fill: '#3f0'
         , 'fill-opacity': 0.4
         , stroke: '#969'
