@@ -21,7 +21,6 @@ class Space {
     }
 
     place(el) {
-        window.console.log('place', this)        
         var x = this.x + actor_spacing
         var y = this.y + actor_spacing
         this.devide_space_corner(x, y, el.bbox().width, el.bbox().height)        
@@ -44,10 +43,8 @@ class Space {
             if (curspace == null)
                 continue
             
-            if ((curspace.width() < bbox.width) || (curspace.height() < bbox.height)) {
-                window.console.log('skipping small space', curspace)
+            if ((curspace.width() < bbox.width) || (curspace.height() < bbox.height))
                 continue
-            }
 
             if (space == null) {
                 space = curspace
@@ -57,7 +54,6 @@ class Space {
             if (curspace.width() < space.width() || curspace.height() < space.height() )
                 space = curspace
         }
-        window.console.log('find_space return', space)
         return space
     }
 }
