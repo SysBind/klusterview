@@ -17,16 +17,22 @@ class Stage {
         this.actors.push(el)        
     }
 
-    draw_spaces(space = this.root_space) {
-        this.draw.rect(space.width(), space.height()).move(space.x, space.y).attr({
-            fill: '#3f0'
-            , 'fill-opacity': 0
-            , stroke: '#969'
-            , 'stroke-width': 1
-        })
+    show_spaces(space = this.root_space, wait = 0) {
+        if (space.spaces.size == 0 && !space.center) {        
+            var rect = this.draw.rect(space.width(), space.height()).move(space.x, space.y).attr({
+                fill: '#f03'
+                , 'fill-opacity': 1
+                , stroke: '#969'
+                , 'stroke-width': 3
+            })        
+            rect.animate({duration: 1000,
+                          wait: wait}).attr({'fill-opacity': 0, 'stroke-width': 1})
+
+            return
+        }
 
         for (const entry of space.spaces.entries()) {            
-            this.draw_spaces(entry[0])
+            this.show_spaces(entry[0], wait + 1000)
         }
     }
 }
@@ -35,42 +41,6 @@ class Stage {
 
 
 var stage = new Stage()
-stage.add(new SVG.Rect().size(200,200).attr({
-  fill: '#f6c'
-, 'fill-opacity': 0.7
-, stroke: '#322'
-, 'stroke-width': 5
-}))
-
-// stage.add(new SVG.Rect().size(100,100).attr({
-//   fill: '#f06'
-// , 'fill-opacity': 0.9
-// , stroke: '#333'
-// , 'stroke-width': 10
-// }))
-
-// stage.add(new SVG.Rect().size(200,200).attr({
-//   fill: '#f60'
-// , 'fill-opacity': 0.9
-// , stroke: '#636'
-// , 'stroke-width': 10
-// }))
-
-// stage.add(new SVG.Rect().size(300,300).attr({
-//   fill: '#f60'
-// , 'fill-opacity': 0.9
-// , stroke: '#636'
-// , 'stroke-width': 10
-// }))
-
-// stage.add(new SVG.Rect().size(240,240).attr({
-//   fill: '#f30'
-// , 'fill-opacity': 0.1
-// , stroke: '#996'
-// , 'stroke-width': 10
-// }))
-
-
 
 function add_one() {
     var size = Math.floor(Math.random() * 300);
@@ -82,6 +52,6 @@ function add_one() {
     }))
 }
 
-function draw_spaces() {
-    stage.draw_spaces()
+function show_spaces() {
+    stage.show_spaces()
 }
