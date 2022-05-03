@@ -22,18 +22,10 @@ class Space {
     }
 
     place(el) {
-        window.console.log('place', this)
-        var x, y = 0
-        // place center
-        if (this.width() / el.bbox().width < 2) { 
-            x = this.x + (this.width() - el.bbox().width) / 2
-            y = this.y + (this.height() - el.bbox().height) / 2
-            this.devide_space_center(x, y, el.bbox().width, el.bbox().height)
-        } else {  // place corner
-            x = this.x +  actor_spacing
-            y = this.y + actor_spacing
-            this.devide_space_corner(x, y, el.bbox().width, el.bbox().height)
-        }
+        window.console.log('place', this)        
+        var x = this.x + actor_spacing
+        var y = this.y + actor_spacing
+        this.devide_space_corner(x, y, el.bbox().width, el.bbox().height)        
         el.animate().move(x, y)        
     }
 
@@ -41,11 +33,6 @@ class Space {
         this.spaces.add(new Space(x + width, y, this.x2, y + height))
         this.spaces.add(new Space(x, y + height, x + width, this.y2))
         this.spaces.add(new Space(x + width, y + height, this.x2, this.y2))
-    }
-
-    devide_space_center(x, y, width, height) {
-        window.console.log('CENTER')
-        this.center = true
     }
 
     find_space(bbox) {

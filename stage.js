@@ -35,6 +35,15 @@ class Stage {
             this.show_spaces(entry[0], wait + 1000)
         }
     }
+
+    shuffle() {
+        this.root_space = new Space(0, 0, stage_width, stage_height)
+        this.actors = this.actors.sort( (a, b) => { return (a.bbox().width <  b.bbox().width) } )
+        for (const act of this.actors) {            
+            let space = this.root_space.find_space(act.bbox())
+            space.place(act)
+        }
+    }
 }
 
 
@@ -54,4 +63,8 @@ function add_one() {
 
 function show_spaces() {
     stage.show_spaces()
+}
+
+function shuffle() {
+    stage.shuffle()
 }
