@@ -10,7 +10,6 @@ class Space {
         this.y2 = y2
 
         this.spaces = new Set()
-        this.center = false
     }
 
     width() {
@@ -36,14 +35,8 @@ class Space {
     }
 
     find_space(bbox) {
-        if (this.center)
-            return null
-        
-        window.console.log('find_space bbox', bbox)
-        if ((this.spaces.size == 0)) {
-            window.console.log('find_space return this', this)
+        if ((this.spaces.size == 0))
             return this
-        }
 
         var space = null
         for (const entry of this.spaces.entries() ) {

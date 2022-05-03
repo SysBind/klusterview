@@ -13,12 +13,18 @@ class Stage {
     add(el) {        
         this.draw.add(el)
         var space = this.root_space.find_space(el.bbox())
+        if (space == null) {
+            window.console.log('no space found, shuffling...')
+            this.shuffle()
+            space = this.root_space.find_space(el.bbox())
+        }
+            
         space.place(el)
         this.actors.push(el)        
     }
 
     show_spaces(space = this.root_space, wait = 0) {
-        if (space.spaces.size == 0 && !space.center) {        
+        if (space.spaces.size == 0) {        
             var rect = this.draw.rect(space.width(), space.height()).move(space.x, space.y).attr({
                 fill: '#f03'
                 , 'fill-opacity': 1
