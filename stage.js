@@ -4,28 +4,60 @@ const stage_width = 800;
 const stage_height = 600;
 const actor_spacing = 20;
 
+class Space {
+    constructor(x, y, x2, y2) {
+        this.x = x
+        this.y = y
+        this.x2 = x2
+        this.y2 = y2
+    }
+
+    width() {
+        return this.x2 - this.x
+    }
+
+    height() {
+        return this.y2 - this.y
+    }
+
+    place(el) {
+        var x, y = 0
+        // place center
+        if (this.width() / el.bbox().width < 2) { 
+            x = (this.width() - el.bbox().width) / 2
+            y = (this.height() - el.bbox().height) / 2
+        } else {  // place corner
+            x = this.x +  actor_spacing
+            y = this.y + actor_spacing
+        }
+        el.animate().move(x, y)
+    }
+}
+
 class Stage {
     constructor(selector = "#stage") {
         this.draw = SVG().addTo(selector).size(stage_width, stage_height)
         this.actors = new SVG.List()
-        this.spaces = [ [0, 0, stage_width, stage_height] ]
+        this.spaces = new Set([ new Space(0, 0, stage_width, stage_height) ])
     }
 
     add(el) {        
         this.draw.add(el)
         var space = this.find_smallest_fit(el.bbox())
-        var x = ((space[2] - space[0]) - (el.bbox().width) ) / 2
-        var y = ((space[3] - space[1]) - (el.bbox().height) ) / 2
-        el.animate().move(x, y)
+        space.place(el)
         this.actors.push(el)
+        recalculate_spaces()
     }
 
     find_smallest_fit(bbox) {
-        //for (space in this.spaces) {    }
-        return this.spaces[0];
+        var space = null
+        this.spaces.forEach( (value) => { space = value })
+        
+        return space;
     }
 
     recalculate_spaces() {
+        this.spaces.clear()
     }
 }
 
