@@ -64,7 +64,7 @@ class Space {
             if (curspace == null)
                 continue
             
-            if ((curspace.width < bbox.width) || (curspace.height < bbox.height)) {
+            if ((curspace.width() < bbox.width) || (curspace.height() < bbox.height)) {
                 window.console.log('skipping small space', curspace)
                 continue
             }
@@ -74,7 +74,7 @@ class Space {
                 continue
             }
             
-            if (curspace.width() > space.width() || curspace.height() > space.height() )
+            if (curspace.width() < space.width() || curspace.height() < space.height() )
                 space = curspace
         }
         window.console.log('find_space return', space)
