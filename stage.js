@@ -58,7 +58,7 @@ class Stage {
 var stage = new Stage()
 
 function add_one() {
-    var size = Math.floor(Math.random() * 300);
+    var size = Math.floor(Math.random() * 200) + 100;
     stage.add(new SVG.Rect().size(size, size).attr({
         fill: '#3f0'
         , 'fill-opacity': 0.4
