@@ -3,23 +3,16 @@
     <title>Kluster View</title>
     <link rel="stylesheet" type="text/css" href="front.css">
   </head>
-  <body>
-    <svg viewBox="0 0 800 80" xmlns="http://www.w3.org/2000/svg">
-      <style>
-        @font-face {
-            font-family: "prida";
-            src: url("fonts/Prida61.otf");
-        }
-        .title { font-family: prida; font-size: 1.5em; font-weight: bold; stroke: gray; stroke-width: 1px; fill: black; }
-      </style>
-      <text x="200" y="20" class="title"> Nodes </text>
-    </svg>
+  <body>   
+      <svg viewBox="0 0 800 80" xmlns="http://www.w3.org/2000/svg">
+        <text x="100" y="20" class="title"> Nodes </text>
+      </svg>
     
-    <div id="stage">
-    </div>
-    <button onclick="add_one()"> Add One </button>
-    <button onclick="show_spaces()"> Show Spaces </button>
-    <button onclick="shuffle()"> Shuffle </button>
+      <div id="stage">
+      </div>
+      <button onclick="add_one()"> Add One </button>
+      <button onclick="show_spaces()"> Show Spaces </button>
+      <button onclick="shuffle()"> Shuffle </button>    
   </body>
   <script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.0/dist/svg.min.js"></script>
   <script src="space.js"></script>  

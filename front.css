@@ -1,0 +1,24 @@
+body {
+    background-color: gray;
+}
+
+@font-face {
+    font-family: "prida";
+    src: url("fonts/Prida61.otf");
+}
+
+.title {
+    font-family: prida;
+    font-size: 1.5em;
+    font-weight: bold;
+    stroke: black;
+    stroke-width: 1px;
+    fill: blue;
+    fill-opacity: 0.5;
+}
+
+
+rect {
+    rx: 20px;
+    ry: 10px;
+}
