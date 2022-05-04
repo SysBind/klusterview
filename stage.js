@@ -18,7 +18,12 @@ class Stage {
             this.shuffle()
             space = this.root_space.find_space(el.bbox())
         }
-            
+
+        if (space == null) {
+            el.animate().attr({ fill: '#f00', 'fill-opacity': 1 })
+            el.animate({wait: 2000}).attr({ fill: '#f00', 'fill-opacity': 0, 'stroke-width': 0 })
+            return
+        }
         space.place(el)
         this.actors.push(el)        
     }
