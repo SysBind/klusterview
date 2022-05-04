@@ -1,7 +1,7 @@
 // stage.js
 
-const stage_width = 800;
-const stage_height = 600;
+const stage_width = 1024;
+const stage_height = 768;
 
 class Stage {
     constructor(selector = "#stage") {
