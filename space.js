@@ -23,14 +23,13 @@ class Space {
     place(el) {
         var x = this.x + actor_spacing
         var y = this.y + actor_spacing
-        this.devide_space_corner(x, y, el.bbox().width, el.bbox().height)        
+        this.devide_space(x, y, el.bbox().width, el.bbox().height)        
         el.animate().move(x, y)        
     }
 
-    devide_space_corner(x, y, width, height) {
-        this.spaces.add(new Space(x + width, y, this.x2, y + height))
+    devide_space(x, y, width, height) {
         this.spaces.add(new Space(x, y + height, x + width, this.y2))
-        this.spaces.add(new Space(x + width, y + height, this.x2, this.y2))
+        this.spaces.add(new Space(x + width, y, this.x2, this.y2))
     }
 
     find_space(bbox) {
