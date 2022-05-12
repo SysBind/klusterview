@@ -24,15 +24,9 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/homedir"
-	//
-	// Uncomment to load all auth plugins
-	// _ "k8s.io/client-go/plugin/pkg/client/auth"
-	//
-	// Or uncomment to load specific auth plugins
-	// _ "k8s.io/client-go/plugin/pkg/client/auth/azure"
-	// _ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
-	// _ "k8s.io/client-go/plugin/pkg/client/auth/oidc"
-	// _ "k8s.io/client-go/plugin/pkg/client/auth/openstack"
+	metricsv "k8s.io/metrics/pkg/client/clientset/versioned"
+
+	_ "k8s.io/client-go/plugin/pkg/client/auth"
 )
 
 func main() {
@@ -59,4 +53,22 @@ func main() {
 
 	nodes, err := clientset.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{})
 	fmt.Printf("There are %d nodes in the cluster\n", len(nodes.Items))
+
+	metricsClientset, err := metricsv.NewForConfig(config)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	namespace := "default"
+	podMetricsList, err := metricsClientset.MetricsV1beta1().PodMetricses(namespace).List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		panic(err.Error())
+	}
+
+	for _, v := range podMetricsList.Items {
+		fmt.Printf("%s\n", v.GetName())
+		fmt.Printf("%s\n", v.GetNamespace())
+		fmt.Printf("%vm\n", v.Containers[0].Usage.Cpu().MilliValue())
+		fmt.Printf("%vMi\n", v.Containers[0].Usage.Memory().Value()/(1024*1024))
+	}
 }
