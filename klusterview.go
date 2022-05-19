@@ -53,6 +53,9 @@ func main() {
 
 	nodes, err := clientset.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{})
 	fmt.Printf("There are %d nodes in the cluster\n", len(nodes.Items))
+	for _, node := range nodes.Items {
+		fmt.Println(node.Name, node.Status)
+	}
 
 	metricsClientset, err := metricsv.NewForConfig(config)
 	if err != nil {
@@ -66,9 +69,8 @@ func main() {
 	}
 
 	for _, v := range podMetricsList.Items {
-		fmt.Printf("%s\n", v.GetName())
-		fmt.Printf("%s\n", v.GetNamespace())
-		fmt.Printf("%vm\n", v.Containers[0].Usage.Cpu().MilliValue())
+		fmt.Printf("%s %s\n", v.GetName(), v.GetNamespace())
+		fmt.Printf("%vm / %vm \n", v.Containers[0].Usage.Cpu().MilliValue(), v.Containers[0].Usage.Cpu().MilliValue())
 		fmt.Printf("%vMi\n", v.Containers[0].Usage.Memory().Value()/(1024*1024))
 	}
 }
