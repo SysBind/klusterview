@@ -54,7 +54,9 @@ func main() {
 	nodes, err := clientset.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{})
 	fmt.Printf("There are %d nodes in the cluster\n", len(nodes.Items))
 	for _, node := range nodes.Items {
-		fmt.Println(node.Name, node.Status)
+		fmt.Printf("%s\n----------------------------------------------------------\n", node.Name)
+		fmt.Printf("\tALLOCATABLE CPU: %v\n  \tMEM: %v \n\n", node.Status.Allocatable.Cpu(), node.Status.Allocatable.Memory())
+		fmt.Printf("\tCAPACITY CPU: %v\n  \tMEM: %v \n\n", node.Status.Capacity.Cpu(), node.Status.Capacity.Memory())
 	}
 
 	metricsClientset, err := metricsv.NewForConfig(config)
@@ -62,7 +64,7 @@ func main() {
 		panic(err.Error())
 	}
 
-	namespace := "default"
+	namespace := "acid"
 	podMetricsList, err := metricsClientset.MetricsV1beta1().PodMetricses(namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		panic(err.Error())
