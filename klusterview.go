@@ -52,6 +52,7 @@ func main() {
 		panic(err.Error())
 	}
 
+	// Capacity
 	nodes, err := clientset.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{})
 	fmt.Printf("There are %d nodes in the cluster\n", len(nodes.Items))
 	for _, node := range nodes.Items {
@@ -60,12 +61,24 @@ func main() {
 		fmt.Printf("\tCAPACITY CPU: %v\n  \tMEM: %v \n\n", node.Status.Capacity.Cpu(), node.Status.Capacity.Memory())
 	}
 
+	// Utilization
 	metricsClientset, err := metricsv.NewForConfig(config)
 	if err != nil {
 		panic(err.Error())
 	}
 
-	namespace := "acid"
+	nodMetricsList, err := metricsClientset.MetricsV1beta1().NodeMetricses().List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		panic(err.Error())
+	}
+	for _, v := range nodMetricsList.Items {
+		fmt.Printf("%s\n----------------------------------------------------------\n", v.Name)
+		fmt.Printf("%vm\n", v.Usage.Cpu().MilliValue())
+		fmt.Printf("%vMi\n", v.Usage.Memory().MilliValue()/(1024*1024))
+		fmt.Printf("Window: %v\n", v.Window.Duration)
+	}
+
+	namespace := "istio-gateways"
 	podMetricsList, err := metricsClientset.MetricsV1beta1().PodMetricses(namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		panic(err.Error())
@@ -74,7 +87,8 @@ func main() {
 	for _, v := range podMetricsList.Items {
 		fmt.Printf("%s %s\n", v.GetName(), v.GetNamespace())
 		fmt.Printf("%vm / %vm \n", v.Containers[0].Usage.Cpu().MilliValue(), v.Containers[0].Usage.Cpu().MilliValue())
-		fmt.Printf("%vMi\n", v.Containers[0].Usage.Memory().Value()/(1024*1024))
+		fmt.Printf("%vMi\n", v.Containers[0].Usage.Memory().MilliValue()/(1024*1024))
+		fmt.Printf("%vMi\n", v.Containers[0].Usage.Memory().MilliValue()/(1024*1024))
 	}
 
 	ctx := context.Background()
