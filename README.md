@@ -14,11 +14,11 @@ _Keys:_
 - node:node_name:util_cpu  - utilization of cpu (Time Series)
 - node:node_name:util_mem  - utilization of memory (Time Series)
 - pod:pod_name             - pod meta data (dictionary)
-- pod:pod_name:containers  - containers 
-- pod:pod_name:req_cpu     - requested cpu (int)
-- pod:pod_name:req_mem     - requested memory (int)
-- pod:pod_name::util_cpu   - utilization of cpu (Time Series)
-- pod:pod_name:util_mem    - utilization of memory (Time Series)
+- pod:pod_name:containers  - containers (set)
+- pod:pod_name:container_name:req_cpu     - requested cpu (int)
+- pod:pod_name:container_name:req_mem     - requested memory (int)
+- pod:pod_name:container_name:util_cpu   - utilization of cpu (Time Series)
+- pod:pod_name:container_name:util_mem    - utilization of memory (Time Series)
 
 
 ## Pipeline Stages

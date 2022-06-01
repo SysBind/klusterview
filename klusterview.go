@@ -15,6 +15,8 @@ limitations under the License.
 package main
 
 import (
+	"time"
+
 	"github.com/sysbind/klusterview/ingest"
 )
 
@@ -25,4 +27,8 @@ func main() {
 		panic(err.Error())
 	}
 	defer ing.Close()
+
+	ing.Ingest("kkey", "vval")
+	ing.IngestSet("setkey", []string{"XXX", "NODE2", "NODY"})
+	ing.IngestTS("tskey", time.Now().Unix(), 3.14159265)
 }
