@@ -19,3 +19,11 @@ _Keys:_
 - pod:pod_name:req_mem     - requested memory (int)
 - pod:pod_name::util_cpu   - utilization of cpu (Time Series)
 - pod:pod_name:util_mem    - utilization of memory (Time Series)
+
+
+## Pipeline Stages
+
+- Scan - Scan cluster Nodes & Pods to extract resource requests & utilization
+- Ingest - Write data to Redis
+
+

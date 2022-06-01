@@ -15,105 +15,14 @@ limitations under the License.
 package main
 
 import (
-	"context"
-	"flag"
-	"fmt"
-	"path/filepath"
-
-	"github.com/go-redis/redis/v8"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/tools/clientcmd"
-	"k8s.io/client-go/util/homedir"
-	metricsv "k8s.io/metrics/pkg/client/clientset/versioned"
-
-	_ "k8s.io/client-go/plugin/pkg/client/auth"
+	"github.com/sysbind/klusterview/ingest"
 )
 
 func main() {
-	var kubeconfig *string
-	if home := homedir.HomeDir(); home != "" {
-		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	} else {
-		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
-	}
-	flag.Parse()
+	ing, err := ingest.NewSample("localhost:6379")
 
-	// use the current context in kubeconfig
-	fmt.Printf("kube config is %s\n", *kubeconfig)
-	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
 	if err != nil {
 		panic(err.Error())
 	}
-
-	// create the clientset
-	clientset, err := kubernetes.NewForConfig(config)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	// Capacity
-	nodes, err := clientset.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{})
-	fmt.Printf("There are %d nodes in the cluster\n", len(nodes.Items))
-	for _, node := range nodes.Items {
-		fmt.Printf("%s\n----------------------------------------------------------\n", node.Name)
-		fmt.Printf("\tALLOCATABLE CPU: %v\n  \tMEM: %v \n\n", node.Status.Allocatable.Cpu(), node.Status.Allocatable.Memory())
-		fmt.Printf("\tCAPACITY CPU: %v\n  \tMEM: %v \n\n", node.Status.Capacity.Cpu(), node.Status.Capacity.Memory())
-	}
-
-	// Utilization
-	metricsClientset, err := metricsv.NewForConfig(config)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	nodMetricsList, err := metricsClientset.MetricsV1beta1().NodeMetricses().List(context.TODO(), metav1.ListOptions{})
-	if err != nil {
-		panic(err.Error())
-	}
-	for _, v := range nodMetricsList.Items {
-		fmt.Printf("%s\n----------------------------------------------------------\n", v.Name)
-		fmt.Printf("%vm\n", v.Usage.Cpu().MilliValue())
-		fmt.Printf("%vMi\n", v.Usage.Memory().MilliValue()/(1024*1024))
-		fmt.Printf("Window: %v\n", v.Window.Duration)
-	}
-
-	namespace := "istio-gateways"
-	podMetricsList, err := metricsClientset.MetricsV1beta1().PodMetricses(namespace).List(context.TODO(), metav1.ListOptions{})
-	if err != nil {
-		panic(err.Error())
-	}
-
-	for _, v := range podMetricsList.Items {
-		fmt.Printf("%s %s\n", v.GetName(), v.GetNamespace())
-		fmt.Printf("%vm / %vm \n", v.Containers[0].Usage.Cpu().MilliValue(), v.Containers[0].Usage.Cpu().MilliValue())
-		fmt.Printf("%vMi\n", v.Containers[0].Usage.Memory().MilliValue()/(1024*1024))
-		fmt.Printf("%vMi\n", v.Containers[0].Usage.Memory().MilliValue()/(1024*1024))
-	}
-
-	ctx := context.Background()
-
-	rdb := redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
-	})
-
-	err = rdb.Set(ctx, "key", "value", 0).Err()
-	if err != nil {
-		panic(err)
-	}
-
-	val, err := rdb.Get(ctx, "key").Result()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("key", val)
-
-	val2, err := rdb.Get(ctx, "key2").Result()
-	if err == redis.Nil {
-		fmt.Println("key2 does not exist")
-	} else if err != nil {
-		panic(err)
-	} else {
-		fmt.Println("key2", val2)
-	}
+	defer ing.Close()
 }
