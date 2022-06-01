@@ -82,6 +82,6 @@ func NewSample(host string) (ing Ingester, err error) {
 
 	client.Do(ctx, client.B().Set().Key(key).Value(val).Build()).Error()
 
-	ing = redis{host: host, sample: 0, client: client}
+	ing = redis{host: host, sample: newSampleID, client: client}
 	return
 }
