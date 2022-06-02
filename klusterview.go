@@ -18,11 +18,19 @@ import (
 	"time"
 
 	"github.com/sysbind/klusterview/ingest"
+	"github.com/sysbind/klusterview/scan"
 )
 
 func main() {
-	ing, err := ingest.NewSample("localhost:6379")
+	// Initiate Scanner
+	scanner, err := scan.NewScanner()
+	if err != nil {
+		panic(err.Error())
+	}
+	scanner.Start()
 
+	// Initiate Sample
+	ing, err := ingest.NewSample("localhost:6379")
 	if err != nil {
 		panic(err.Error())
 	}
