@@ -15,6 +15,7 @@ limitations under the License.
 package main
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/sysbind/klusterview/ingest"
@@ -27,7 +28,16 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
-	scanner.Start()
+
+	nodes, pods := scanner.Start()
+
+	for node := range nodes {
+		fmt.Println(node.Name)
+	}
+
+	for pod := range pods {
+		fmt.Println(pod)
+	}
 
 	// Initiate Sample
 	ing, err := ingest.NewSample("localhost:6379")

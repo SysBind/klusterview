@@ -4,9 +4,9 @@ package scan
 
 import (
 	"context"
-	"fmt"
 	"path/filepath"
 
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
@@ -15,35 +15,49 @@ import (
 )
 
 type Scanner interface {
-	Start() error
+	Start() (<-chan corev1.Node, <-chan corev1.Pod)
 }
 
 type scanner struct {
 	client *kubernetes.Clientset
+	nodes  chan corev1.Node
+	pods   chan corev1.Pod
 }
 
-func (scan scanner) Start() (err error) {
-	var kubeconfig string = filepath.Join(homedir.HomeDir(), ".kube", "config")
+func (scan scanner) Start() (<-chan corev1.Node, <-chan corev1.Pod) {
+	// create channels for output
+	scan.nodes = make(chan corev1.Node)
+	scan.pods = make(chan corev1.Pod)
 
-	// use the current context in kubeconfig
-	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
-
-	// create the clientset
-	scan.client, err = kubernetes.NewForConfig(config)
-
-	if err != nil {
-		return
-	}
 	go scan.getNodes()
-	return
+	go scan.getPods()
+
+	return scan.nodes, scan.pods
 }
 
 func (scan scanner) getNodes() {
-	nodes, _ := scan.client.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{})
-	fmt.Printf("There are %d nodes in the cluster\n", len(nodes.Items))
+	list, _ := scan.client.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{})
+	for _, node := range list.Items {
+		scan.nodes <- node
+	}
+	close(scan.nodes)
 }
 
-func NewScanner() (scan Scanner, err error) {
-	scan = scanner{}
-	return
+func (scan scanner) getPods() {
+	close(scan.pods)
+}
+
+func NewScanner() (Scanner, error) {
+	var kubeconfig string = filepath.Join(homedir.HomeDir(), ".kube", "config")
+
+	// use the current context in kubeconfig
+	config, _ := clientcmd.BuildConfigFromFlags("", kubeconfig)
+
+	// create the clientset
+	client, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		return nil, err
+	}
+
+	return scanner{client: client}, nil
 }
