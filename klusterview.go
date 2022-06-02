@@ -37,11 +37,16 @@ func main() {
 	nodes, pods := scanner.Start()
 
 	for node := range nodes {
-		fmt.Println(node.Name)
+		cpu := node.Status.Allocatable.Cpu().String()
+		mem := node.Status.Allocatable.Memory().String()
+		ing.Ingest(fmt.Sprintf("node:%s:alloc_cpu", node.Name), cpu, false)
+		ing.Ingest(fmt.Sprintf("node:%s:alloc_mem", node.Name), mem, false)
+		// add to sample's nodes list
 		ing.IngestSet("nodes", []string{node.Name}, true)
 	}
 
 	for pod := range pods {
 		fmt.Println(pod)
 	}
+	fmt.Println("done")
 }
