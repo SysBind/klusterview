@@ -16,7 +16,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/sysbind/klusterview/ingest"
 	"github.com/sysbind/klusterview/scan"
@@ -28,25 +27,21 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
-
-	nodes, pods := scanner.Start()
-
-	for node := range nodes {
-		fmt.Println(node.Name)
-	}
-
-	for pod := range pods {
-		fmt.Println(pod)
-	}
-
-	// Initiate Sample
+	// Initiate Ingester
 	ing, err := ingest.NewSample("localhost:6379")
 	if err != nil {
 		panic(err.Error())
 	}
 	defer ing.Close()
 
-	ing.Ingest("kkey", "vval", true)
-	ing.IngestSet("setkey", []string{"XXX", "NODE2", "NODY"}, false)
-	ing.IngestTS("tskey", time.Now().Unix(), 3.14159265, false)
+	nodes, pods := scanner.Start()
+
+	for node := range nodes {
+		fmt.Println(node.Name)
+		ing.IngestSet("nodes", []string{node.Name}, true)
+	}
+
+	for pod := range pods {
+		fmt.Println(pod)
+	}
 }

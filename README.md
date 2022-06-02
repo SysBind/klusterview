@@ -6,6 +6,7 @@
 Hybrid data model - Basic Redis data types + Time Series keys
 
 _Keys:_
+- samples - total samples count in db (int)
 - sample:i - timestamp of beginning of cluster scan (int)
 - sample:i:nodes -  node names existing at time of scan (set)
 - sample:i:pods - pod names existing at time of scan (set)

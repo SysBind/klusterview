@@ -23,7 +23,7 @@ type Ingester interface {
 // redis struct to implement Ingester using redis
 type redis struct {
 	host   string
-	sample int
+	sample int64
 	client rueidis.Client
 }
 
@@ -74,23 +74,15 @@ func NewSample(host string) (ing Ingester, err error) {
 
 	ctx := context.Background()
 
-	result, err := client.Do(ctx, client.B().Arbitrary("KEYS").Args("sample:*").Build()).ToMessage()
+	result, err := client.Do(ctx, client.B().Incr().Key("samples").Build()).ToInt64()
 	if err != nil {
 		return
 	}
-
-	samples, err := result.ToArray()
-	if err != nil {
-		return
-	}
-
-	// TODO: iterate through all samples and get actual highest id
-	newSampleID := len(samples) + 1
-	key := fmt.Sprintf("sample:%d", newSampleID)
+	key := fmt.Sprintf("sample:%d", result)
 	val := strconv.FormatInt(time.Now().Unix(), 10)
 
 	client.Do(ctx, client.B().Set().Key(key).Value(val).Build()).Error()
 
-	ing = redis{host: host, sample: newSampleID, client: client}
+	ing = redis{host: host, sample: result, client: client}
 	return
 }
