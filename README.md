@@ -1,4 +1,23 @@
-# klusterview
+# Klusterview
+
+Klusterview scans Kubernetes cluster to visualize resources & utilization
+
+
+## Compiling
+```go build .```
+
+## Running
+
+- first have Redis with Time Series module enabled, e.g:
+  ```docker run -d --name redis -p 6379:6379 redis/redis-stack```
+
+- run a sample:
+  ```./klusterview```
+  This will populate Redis with the sample data.
+
+- run [Webdis](https://webd.is) to expose Redis on HTTP port (7379).
+
+- open index.html
 
 
 ## Data Model
