@@ -36,7 +36,7 @@ func main() {
 	}
 	defer ing.Close()
 
-	ing.Ingest("kkey", "vval")
-	ing.IngestSet("setkey", []string{"XXX", "NODE2", "NODY"})
-	ing.IngestTS("tskey", time.Now().Unix(), 3.14159265)
+	ing.Ingest("kkey", "vval", true)
+	ing.IngestSet("setkey", []string{"XXX", "NODE2", "NODY"}, false)
+	ing.IngestTS("tskey", time.Now().Unix(), 3.14159265, false)
 }

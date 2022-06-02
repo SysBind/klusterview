@@ -15,9 +15,9 @@ import (
 // Ingester handles storing key/value pairs in a data store
 type Ingester interface {
 	io.Closer
-	Ingest(key string, val string) error
-	IngestSet(key string, val []string) error
-	IngestTS(key string, timestamp int64, val float64) error
+	Ingest(key string, val string, sample_prefix bool) error
+	IngestSet(key string, val []string, sample_prefix bool) error
+	IngestTS(key string, timestamp int64, val float64, sample_prefix bool) error
 }
 
 // redis struct to implement Ingester using redis
@@ -28,22 +28,31 @@ type redis struct {
 }
 
 // Ingest Simple Value (SET)
-func (r redis) Ingest(key string, val string) (err error) {
+func (r redis) Ingest(key string, val string, sample_prefix bool) (err error) {
 	ctx := context.Background()
+	if sample_prefix {
+		key = fmt.Sprintf("sample:%d:%s", r.sample, key)
+	}
 	r.client.Do(ctx, r.client.B().Set().Key(key).Value(val).Build()).Error()
 	return
 }
 
 // Ingest Set (SADD)
-func (r redis) IngestSet(key string, val []string) (err error) {
+func (r redis) IngestSet(key string, val []string, sample_prefix bool) (err error) {
 	ctx := context.Background()
+	if sample_prefix {
+		key = fmt.Sprintf("sample:%d:%s", r.sample, key)
+	}
 	r.client.Do(ctx, r.client.B().Sadd().Key(key).Member(val...).Build()).Error()
 	return
 }
 
 // Ingest Time Series (TS.ADD)
-func (r redis) IngestTS(key string, timestamp int64, val float64) (err error) {
+func (r redis) IngestTS(key string, timestamp int64, val float64, sample_prefix bool) (err error) {
 	ctx := context.Background()
+	if sample_prefix {
+		key = fmt.Sprintf("sample:%d:%s", r.sample, key)
+	}
 	r.client.Do(ctx, r.client.B().TsAdd().Key(key).Timestamp(timestamp).Value(val).Build()).Error()
 	return
 }
