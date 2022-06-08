@@ -17,7 +17,8 @@ class KNode {
         this.alloc_mem = alloc_mem
 
         // Graphic Representation
-        this.svg = new SVG.Svg().size(this.alloc_cpu, this.alloc_mem + node_panel_size)
+        this.svg = new SVG.Svg().size(this.alloc_cpu + node_panel_size,
+                                      this.alloc_mem + 2*node_panel_size)
         this.svg.rect(this.alloc_cpu, this.alloc_mem).attr({
                     fill: '#3f0'
                     , 'fill-opacity': 0.4

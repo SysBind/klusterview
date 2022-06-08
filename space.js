@@ -1,7 +1,7 @@
 // space.js
 
 const actor_spacing_x = 30;
-const actor_spacing_y = 10;
+const actor_spacing_y = 30;
 
 class Space {
     constructor(x, y, x2, y2) {
