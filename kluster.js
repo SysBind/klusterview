@@ -13,12 +13,7 @@ redis.GET('samples').then( function(samples) {
                 alloc_mem = val[2].substring(0, val[2].length - 2) / 1000 / 150
                 console.log(`cpu: ${alloc_cpu}`)
                 console.log(`mem: ${alloc_mem}`)
-                stage.add(new SVG.Rect().size(alloc_cpu, alloc_mem).attr({
-                    fill: '#3f0'
-                    , 'fill-opacity': 0.4
-                    , stroke: '#969'
-                    , 'stroke-width': 5
-                }))                
+                stage.add(new KNode(alloc_cpu, alloc_mem).SVG)
             })
         })
     })
