@@ -1,6 +1,7 @@
 // space.js
 
-const actor_spacing = 10;
+const actor_spacing_x = 30;
+const actor_spacing_y = 10;
 
 class Space {
     constructor(x, y, x2, y2) {
@@ -21,8 +22,8 @@ class Space {
     }
 
     place(el) {
-        var x = this.x + actor_spacing
-        var y = this.y + actor_spacing
+        var x = this.x + actor_spacing_x
+        var y = this.y + actor_spacing_y
         this.devide_space(x, y, el.bbox().width, el.bbox().height)        
         el.animate().move(x, y)        
     }
