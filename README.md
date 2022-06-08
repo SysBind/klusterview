@@ -8,16 +8,16 @@ Klusterview scans Kubernetes cluster to visualize resources & utilization
 
 ## Running
 
-- first have Redis with Time Series module enabled, e.g:
+- First have Redis with Time Series module enabled, e.g:
   ```docker run -d --name redis -p 6379:6379 redis/redis-stack```
 
-- run a sample:
+- Run a sample:
   ```./klusterview```
   This will populate Redis with the sample data.
 
-- run [Webdis](https://webd.is) to expose Redis on HTTP port (7379).
+- Run [Webdis](https://webd.is) to expose Redis on HTTP port (7379).
 
-- open index.html
+- Run simple web server on localhost (e.g: php -S 0.0.0.0:8000) and browse there.
 
 
 ## Data Model

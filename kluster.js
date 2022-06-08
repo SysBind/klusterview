@@ -6,19 +6,25 @@ var redis = new Redis()
 redis.GET('samples').then( function(samples) {
     console.log(`SAMPLES: ${samples}`)
     redis.SMEMBERS(`sample:${samples}:nodes`).then( function(nodes) {
+        let i = 0;
         nodes.forEach(function(node) {            
             redis.MGET(`node:${node}:alloc_cpu`, `node:${node}:alloc_mem`).then(function (val) {
                 console.log(`NODE  ${node}`)
-                alloc_cpu = val[1].substring(0, val[1].length - 1) / 50
-                alloc_mem = val[2].substring(0, val[2].length - 2) / 1000 / 100
+                alloc_cpu = val[1].substring(0, val[1].length - 1) / 30
+                alloc_mem = val[2].substring(0, val[2].length - 2) / 1000 / 150
                 console.log(`cpu: ${alloc_cpu}`)
                 console.log(`mem: ${alloc_mem}`)
-                stage.add(new SVG.Rect().size(alloc_cpu, alloc_mem).attr({
-                    fill: '#3f0'
-                    , 'fill-opacity': 0.4
-                    , stroke: '#969'
-                    , 'stroke-width': 5
-                }))
+                i = i + 10
+                t = 50 * i
+                console.log(`Timeout: ${t}`)
+                window.setTimeout(function() {
+                    stage.add(new SVG.Rect().size(alloc_cpu, alloc_mem).attr({
+                        fill: '#3f0'
+                        , 'fill-opacity': 0.4
+                        , stroke: '#969'
+                        , 'stroke-width': 5
+                    }))
+                }, t);
             })
         })
     })
@@ -26,7 +32,7 @@ redis.GET('samples').then( function(samples) {
 
 
 // debugging stuff
-function add_one() {
+function add_random_one() {
     var width = Math.floor(Math.random() * 250) + 50;
     var height = Math.floor(Math.random() * 250) + 50;
     stage.add(new SVG.Rect().size(width, height).attr({
@@ -36,6 +42,18 @@ function add_one() {
         , 'stroke-width': 5
     }))
 }
+
+function add_one() {
+    var width = 130.66666666666666;
+    var height =  90.70063999999999;
+    stage.add(new SVG.Rect().size(width, height).attr({
+        fill: '#3f0'
+        , 'fill-opacity': 0.4
+        , stroke: '#969'
+        , 'stroke-width': 5
+    }))
+}
+
 
 function show_spaces() {
     stage.show_spaces()
