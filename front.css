@@ -27,6 +27,10 @@ rect:hover {
     filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
 }
 
+svg svg:hover text {
+    filter: invert(72%) sepia(51%) saturate(878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+}
+
 button {
     font-family: prida;
     font-size: 2em;

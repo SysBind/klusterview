@@ -13,7 +13,7 @@ redis.GET('samples').then( function(samples) {
                 alloc_mem = val[2].substring(0, val[2].length - 2) / 1000 / 150
                 console.log(`cpu: ${alloc_cpu}`)
                 console.log(`mem: ${alloc_mem}`)
-                stage.add(new KNode(alloc_cpu, alloc_mem).SVG)
+                stage.add(new KNode(node.substring(16), alloc_cpu, alloc_mem).SVG)
             })
         })
     })
