@@ -6,7 +6,6 @@ var redis = new Redis()
 redis.GET('samples').then( function(samples) {
     console.log(`SAMPLES: ${samples}`)
     redis.SMEMBERS(`sample:${samples}:nodes`).then( function(nodes) {
-        let i = 0;
         nodes.forEach(function(node) {            
             redis.MGET(`node:${node}:alloc_cpu`, `node:${node}:alloc_mem`).then(function (val) {
                 console.log(`NODE  ${node}`)
@@ -14,17 +13,12 @@ redis.GET('samples').then( function(samples) {
                 alloc_mem = val[2].substring(0, val[2].length - 2) / 1000 / 150
                 console.log(`cpu: ${alloc_cpu}`)
                 console.log(`mem: ${alloc_mem}`)
-                i = i + 10
-                t = 50 * i
-                console.log(`Timeout: ${t}`)
-                window.setTimeout(function() {
-                    stage.add(new SVG.Rect().size(alloc_cpu, alloc_mem).attr({
-                        fill: '#3f0'
-                        , 'fill-opacity': 0.4
-                        , stroke: '#969'
-                        , 'stroke-width': 5
-                    }))
-                }, t);
+                stage.add(new SVG.Rect().size(alloc_cpu, alloc_mem).attr({
+                    fill: '#3f0'
+                    , 'fill-opacity': 0.4
+                    , stroke: '#969'
+                    , 'stroke-width': 5
+                }))                
             })
         })
     })
