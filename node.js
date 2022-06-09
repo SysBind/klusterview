@@ -44,11 +44,11 @@ class KNode {
                     , stroke: '#996'
                     , 'stroke-width': 1
         })
-//        this.svg.text(`${this.alloc_mem}Ki`).size(node_panel_size, height * 0.5).move(width - node_panel_size, height - node_panel_size * 0.75).attr({
-//            stroke: '#0362fc',
-//            fill: '#0362fc',
-//            "writing-mode": "tb"            
-//        })
+        this.svg.text(`${this.alloc_mem}Ki`).size(node_panel_size, height * 0.5).move(width - node_panel_size * 0.6, height * 0.3).attr({
+            stroke: '#0362fc',
+            fill: '#0362fc',
+            "writing-mode": "tb"            
+        })
 
         // bottom panel - display allocatable cpu
         this.svg.rect(width * 0.5, node_panel_size).move(width * 0.25, height - node_panel_size).attr({
