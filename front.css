@@ -15,6 +15,11 @@ body {
     stroke-width: 1px;
     fill: blue;
     fill-opacity: 0.5;
+    margin-bottom: 0;    
+}
+
+body > svg {
+    border-bottom: 1px solid black;
 }
 
 svg svg:hover rect {
