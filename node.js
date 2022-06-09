@@ -25,30 +25,32 @@ class KNode {
 
         // main rect
         this.svg.rect(this.alloc_cpu, this.alloc_mem).attr({
-                    fill: '#3f0'
-                    , 'fill-opacity': 0.4
-                    , stroke: '#969'
-                    , 'stroke-width': 5
-        }).move(0, node_panel_size)
+            fill: '#3f0'
+            , 'fill-opacity': 0.4
+            , stroke: '#969'
+            , 'stroke-width': 3
+            ,'rx': "20px"
+            ,'ry': "10px"}).move(0, node_panel_size)
 
         // title
         this.svg.text(this.name).size(this.alloc_cpu, node_panel_size).move(10,10)
 
+
         // external right panel
         this.svg.rect(node_panel_size, height * 0.5).move(width - node_panel_size, height * 0.25).attr({
                     fill: '#f3f'
-                    , 'fill-opacity': 0
-                    , stroke: '#699'
-                    , 'stroke-width': 5
+                    , 'fill-opacity': 0.1
+                    , stroke: '#996'
+                    , 'stroke-width': 1
         })
 
         // external bottom panel
         this.svg.rect(width * 0.5, node_panel_size).move(width * 0.25, height - node_panel_size).attr({
             fill: 'white'
-                    , 'fill-opacity': 0
+                    , 'fill-opacity': 0.1
                     , stroke: '#699'
-                    , 'stroke-width': 5
-        })        
+                    , 'stroke-width': 1
+        })
     }
 
     get SVG() {
