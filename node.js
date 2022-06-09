@@ -44,7 +44,9 @@ class KNode {
                     , stroke: '#996'
                     , 'stroke-width': 1
         })
-        this.svg.text(`${this.alloc_mem}Ki`).size(node_panel_size, height * 0.5).move(width - node_panel_size * 0.6, height * 0.3).attr({
+        
+        const mem_gig = Math.round(this.alloc_mem / 1000 / 1000 )
+        this.svg.text(`${mem_gig}Gi`).size(node_panel_size, height * 0.5).move(width - node_panel_size * 0.6, height * 0.3).attr({
             stroke: '#0362fc',
             fill: '#0362fc',
             "writing-mode": "tb"            
