@@ -33,18 +33,24 @@ class KNode {
             ,'ry': "10px"}).move(0, node_panel_size)
 
         // title
-        this.svg.text(this.name).size(width - node_panel_size, node_panel_size).move(10,10)
+        this.svg.text(this.name).size(width - node_panel_size, node_panel_size).move(10,10).attr({
+            lengthAdjust: "spacingAndGlyphs"
+        })
 
-
-        // external right panel
+        // right panel - display allocatable memory
         this.svg.rect(node_panel_size, height * 0.5).move(width - node_panel_size, height * 0.25).attr({
                     fill: '#f3f'
                     , 'fill-opacity': 0.1
                     , stroke: '#996'
                     , 'stroke-width': 1
         })
+//        this.svg.text(`${this.alloc_mem}Ki`).size(node_panel_size, height * 0.5).move(width - node_panel_size, height - node_panel_size * 0.75).attr({
+//            stroke: '#0362fc',
+//            fill: '#0362fc',
+//            "writing-mode": "tb"            
+//        })
 
-        // bottom panel
+        // bottom panel - display allocatable cpu
         this.svg.rect(width * 0.5, node_panel_size).move(width * 0.25, height - node_panel_size).attr({
             fill: 'white'
                     , 'fill-opacity': 0.1
@@ -52,8 +58,8 @@ class KNode {
                     , 'stroke-width': 1
         })
         this.svg.text(`${this.alloc_cpu}Mi`).size(width * 0.5, node_panel_size).move(width * 0.3, height - node_panel_size * 0.75).attr({
-            stroke: 'blue',
-            fill: 'blue'
+            stroke: '#0362fc',
+            fill: '#0362fc'
         })
     }
 
