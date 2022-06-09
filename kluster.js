@@ -9,8 +9,8 @@ redis.GET('samples').then( function(samples) {
         nodes.forEach(function(node) {            
             redis.MGET(`node:${node}:alloc_cpu`, `node:${node}:alloc_mem`).then(function (val) {
                 console.log(`NODE  ${node}`)
-                alloc_cpu = val[1].substring(0, val[1].length - 1) / 30
-                alloc_mem = val[2].substring(0, val[2].length - 2) / 1000 / 150
+                alloc_cpu = val[1].substring(0, val[1].length - 1)
+                alloc_mem = val[2].substring(0, val[2].length - 2)
                 console.log(`cpu: ${alloc_cpu}`)
                 console.log(`mem: ${alloc_mem}`)
                 stage.add(new KNode(node.substring(16), alloc_cpu, alloc_mem).SVG)
