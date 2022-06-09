@@ -6,6 +6,11 @@ body svg.title-main {
     background-color: #585959;
 }
 
+body > svg  {
+    border: 1px dashed red;
+}
+
+
 #stage {
     border: 1px dashed orange;
 }
