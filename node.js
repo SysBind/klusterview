@@ -22,6 +22,10 @@ class KNode {
 
         // svg container
         this.svg = new SVG.Svg().size(width, height)
+        this.svg.click(function(e) {
+            var audio = new Audio('sounds/menu-selection-click.wav')
+            audio.play()
+        });
 
         // main rect
         this.svg.rect(width, height - node_panel_size).attr({
