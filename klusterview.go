@@ -26,13 +26,15 @@ func main() {
 	nodes, pods, nodemetrics := scanner.Start()
 
 	// Utilization
-	/*go*/
-	func(metrics <-chan v1beta1.NodeMetrics) {
+	go func(metrics <-chan v1beta1.NodeMetrics, ing ingest.Ingester) {
 		for nodemetric := range metrics {
-			//cpu := nodemetric.Usage.Cpu().String()
-			fmt.Printf("cpu %d\n", nodemetric.Usage.Cpu().MilliValue())
+			timestamp := nodemetric.Timestamp.UnixNano()
+			cpu := float64(nodemetric.Usage.Cpu().MilliValue())
+			mem := float64(nodemetric.Usage.Memory().MilliValue() / 1000 / 1000)
+			ing.IngestTS(fmt.Sprintf("node:%s:util_cpu", nodemetric.Name), timestamp, cpu, false)
+			ing.IngestTS(fmt.Sprintf("node:%s:util_mem", nodemetric.Name), timestamp, mem, false)
 		}
-	}(nodemetrics)
+	}(nodemetrics, ing)
 
 	// Capacity
 	for node := range nodes {
