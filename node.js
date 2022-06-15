@@ -18,7 +18,7 @@ class KNode {
 
         // total graphic width & height
         const width = this.alloc_cpu / 30 + node_panel_size
-        const height = this.alloc_mem / 1000 / 150 + 2*node_panel_size
+        const height = this.alloc_mem / 1000 / 100 + 2*node_panel_size
 
         // svg container
         this.svg = new SVG.Svg().size(width, height)

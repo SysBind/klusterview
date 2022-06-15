@@ -1,17 +1,5 @@
-/*
-Copyright 2016 The Kubernetes Authors.
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
+// klusterview.go
 
-// Note: the example only works with the code within the same release/branch.
 package main
 
 import (
@@ -19,6 +7,7 @@ import (
 
 	"github.com/sysbind/klusterview/ingest"
 	"github.com/sysbind/klusterview/scan"
+	"k8s.io/metrics/pkg/apis/metrics/v1beta1"
 )
 
 func main() {
@@ -34,8 +23,18 @@ func main() {
 	}
 	defer ing.Close()
 
-	nodes, pods := scanner.Start()
+	nodes, pods, nodemetrics := scanner.Start()
 
+	// Utilization
+	/*go*/
+	func(metrics <-chan v1beta1.NodeMetrics) {
+		for nodemetric := range metrics {
+			//cpu := nodemetric.Usage.Cpu().String()
+			fmt.Printf("cpu %d\n", nodemetric.Usage.Cpu().MilliValue())
+		}
+	}(nodemetrics)
+
+	// Capacity
 	for node := range nodes {
 		cpu := node.Status.Allocatable.Cpu().String()
 		mem := node.Status.Allocatable.Memory().String()
